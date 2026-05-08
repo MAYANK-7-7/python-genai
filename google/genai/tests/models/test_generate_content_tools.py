@@ -27,6 +27,19 @@ from ... import errors
 from ... import types
 from .. import pytest_helper
 
+import contextlib
+from unittest import mock
+import pytest
+from google.genai import types
+
+try:
+  from mcp import types as mcp_types
+  from mcp import ClientSession
+except ImportError:
+  mcp_types = None
+  ClientSession = None
+
+
 GOOGLE_HOMEPAGE_FILE_PATH = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '../data/google_homepage.png')
 )
@@ -1911,3 +1924,54 @@ def test_server_side_mcp_only_stream(client):
     )
     for chunk in response:
       pass
+
+
+@pytest.mark.asyncio
+async def test_client_side_mcp_unary_async(client):
+    """Test client-side MCP execution for Vertex AI."""
+
+    if not client._api_client.vertexai:
+      pytest.skip("Vertex MCP test is not applicable to MLDev.")
+
+    if mcp_types is None:
+      pytest.skip("MCP library is not installed.")
+
+    mock_session = mock.AsyncMock(spec=ClientSession)
+    mock_session.list_tools.return_value = mcp_types.ListToolsResult(
+        tools=[
+            mcp_types.Tool(
+                name="list_endpoints",
+                description="Lists endpoints",
+                inputSchema={"type": "object", "properties": {}}
+            )
+        ]
+    )
+
+    mock_session.call_tool.return_value = mcp_types.CallToolResult(
+        content=[mcp_types.TextContent(type="text", text="Endpoint list: [my-endpoint-123]")]
+    )
+
+    @contextlib.asynccontextmanager
+    async def mock_connect(*args, **kwargs):
+      yield mock_session
+
+    # Patch the connection helper to bypass live HTTP requests to the MCP server
+    with mock.patch('google.genai._mcp_utils._connect_agent_platform_mcp', side_effect=mock_connect):
+
+      response = await client.aio.models.generate_content(
+        model='gemini-2.5-flash',
+        contents='List my endpoints in us-central1.',
+        config={
+          'tools': [
+            types.Tool(
+              mcp_servers=[types.McpServer(name='endpoints')]
+            )
+          ],
+          'automatic_function_calling': {'disable': False}
+        }
+      )
+
+    # 6. Verify the AFC loop successfully ran the mock tool
+    assert response.text is not None
+    assert mock_session.list_tools.called
+    assert mock_session.call_tool.called
