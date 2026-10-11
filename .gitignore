@@ -18,3 +18,7 @@ nosetests.xml
 
 # macOS
 .DS_Store
+
+# vps_mcp
+.pytest_cache/
+*.egg-info/

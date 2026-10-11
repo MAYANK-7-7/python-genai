@@ -1,0 +1,20 @@
+{
+  "default": "prod",
+  "hosts": {
+    "prod": {
+      "host": "203.0.113.10",
+      "port": 22,
+      "username": "deploy",
+      "key_path": "~/.ssh/id_ed25519",
+      "known_hosts": "~/.ssh/known_hosts",
+      "connect_timeout": 15
+    },
+    "staging": {
+      "host": "staging.example.com",
+      "port": 2222,
+      "username": "ubuntu",
+      "password_env": "VPS_STAGING_PASSWORD",
+      "known_hosts": null
+    }
+  }
+}
