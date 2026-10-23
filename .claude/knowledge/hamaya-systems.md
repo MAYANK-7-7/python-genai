@@ -62,6 +62,42 @@ SSL certificate: /etc/letsencrypt/live/pa-mcp.flybytheway.com/ (covers subdomain
 
 ---
 
+## CONNECTED TOOLS (Full Stack)
+
+| Tool | Business Use |
+|---|---|
+| FBTW MCP Server | Core brain — registers, logs, VPS control, founder activity centre |
+| Supabase | Database — all registers (leads, bookings, corporate, finance) |
+| Power Automate | Automation — follow-up reminders, alerts, flow triggers |
+| Microsoft 365 (Outlook) | Client emails, internal briefs, invoice delivery |
+| Microsoft Teams | Internal communication |
+| SharePoint | Document storage — reports, invoices, contracts |
+| Wix | Website + lead capture form |
+| Hostinger VPS | Server hosting for FBTW platform |
+| Hostinger Hosting | Website hosting |
+| Canva | Marketing creatives, brochures, social posts |
+| Figma | UI design for portal/app |
+| Lucid | Process flow diagrams, system architecture |
+| Miro | Team planning boards |
+| Lovable | Build client portal and CRM view |
+| Claude Skills — marketing-appbox | Run 40+ marketing tasks across 13 functions |
+| Claude Skills — marketing-update | Structured weekly reporting |
+| Brightdata | Competitor intelligence |
+| Google Drive | Document backup and sharing |
+| Google Sheets | Manual tracking (traditional marketing) |
+| Zapier | Connect tools that don't connect natively |
+
+## TOOLS NEEDED — NOT CONNECTED YET
+
+| Tool | Business Use |
+|---|---|
+| WhatsApp Business API (WATI) | Client communication — India primary channel |
+| Zoho Books | Invoicing, payment tracking, GST filing |
+| GDS / Amadeus API | Live fare search and booking data |
+| Calendly | Discovery call booking from website |
+
+---
+
 ## FBTW COMPANY IDENTITY
 
 Full Name: FlyByTheWay Travel Intelligence Platform
