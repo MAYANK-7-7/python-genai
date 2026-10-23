@@ -56,7 +56,7 @@ Pull from all relevant elements; pick the three most material per section, not o
 
 ## Process
 
-1. Ask the user for this period's raw notes or numbers if they were not provided. Accept messy input.
+1. Use the marketing-appbox skill to find where each channel's numbers live and pull them from connected tools. Ask the user for the rest (traditional channels are manual). Accept messy input.
 2. Select the highest-impact items. Merge related items into one bullet.
 3. Draft in the format above. Check: three sections, max three bullets each, every Win has a number, every Blocker has an ask, every Priority has a date.
 4. Return only the update, ready to paste.
