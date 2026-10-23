@@ -8,8 +8,8 @@
 
 | Tool | What It Does |
 |---|---|
-| **marketing-appbox** | Maps 40+ Claude skills across 13 marketing functions — skill navigation layer |
-| **marketing-update** | Structured reporting: 3 sections, max 3 bullets, metrics required, pulls live data first |
+| **marketing-appbox** | Claude skill navigator for marketing tasks — for FBTW covers traditional channels only (print, events, outreach, agent, PR, sponsorships); digital functions (SEO, paid ads, social, analytics) exist in appbox but are not active for FBTW |
+| **marketing-update** | Structured reporting: 3 sections, max 3 bullets — for FBTW uses manual Google Sheets input only; no live digital data |
 
 ---
 
