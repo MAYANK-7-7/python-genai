@@ -4,33 +4,6 @@
 
 ---
 
-## TOOLS BUILT & LIVE
-
-| Tool | What It Does |
-|---|---|
-| **marketing-appbox** | Claude skill navigator for marketing tasks — for FBTW covers traditional channels only (print, events, outreach, agent, PR, sponsorships); digital functions (SEO, paid ads, social, analytics) exist in appbox but are not active for FBTW |
-| **marketing-update** | Structured reporting: 3 sections, max 3 bullets — for FBTW uses manual Google Sheets input only; no live digital data |
-
----
-
-## WHAT FBTW HAS ✅
-
-| Component | Tool |
-|---|---|
-| Database | Supabase |
-| Automation | Power Automate |
-| Communication | Microsoft 365 — Outlook + Teams |
-| Cloud infrastructure | Hostinger VPS |
-| Design / Creative | Canva + Figma |
-| Diagrams / Flows | Lucid + Miro |
-| Website | Wix + Hostinger hosting |
-| App builder | Lovable |
-| Cloud partner | Microsoft Azure |
-| Skill layer | marketing-appbox |
-| Reporting rules | marketing-update |
-
----
-
 ## WHAT FBTW IS MISSING ❌
 
 | Gap | What's Missing | Best Fix |
