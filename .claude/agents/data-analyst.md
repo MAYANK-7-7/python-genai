@@ -17,6 +17,9 @@ tools:
     mcp_server_name: amplitude
     default_config:
       permission_policy: *a1
+skills:
+  - type: anthropic
+    skill_id: docx
 metadata:
   template: data-analyst
 ---

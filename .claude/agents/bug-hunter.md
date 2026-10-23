@@ -29,6 +29,9 @@ tools:
         enabled: true
       - name: edit
         enabled: true
+skills:
+  - type: anthropic
+    skill_id: docx
 metadata:
   template: bug-hunter
 ---

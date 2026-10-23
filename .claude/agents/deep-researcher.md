@@ -9,6 +9,9 @@ tools:
     default_config:
       permission_policy:
         type: auto
+skills:
+  - type: anthropic
+    skill_id: docx
 metadata:
   template: deep-research
 ---
