@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAMAYA — Founder Command Centre</title>
+<style>
+:root {
+  --bg: #0a0c10;
+  --bg2: #111318;
+  --bg3: #1a1d24;
+  --bg4: #22262f;
+  --border: #2a2f3a;
+  --accent: #4f8ef7;
+  --accent2: #7c5ff7;
+  --green: #22c55e;
+  --yellow: #eab308;
+  --red: #ef4444;
+  --orange: #f97316;
+  --text: #e8eaf0;
+  --text2: #9299a8;
+  --text3: #5a6070;
+  --glow: rgba(79,142,247,0.15);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px}
+
+/* LAYOUT */
+.shell{display:grid;grid-template-columns:220px 1fr;grid-template-rows:52px 1fr;height:100vh}
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:0 20px;background:var(--bg2);border-bottom:1px solid var(--border);z-index:100}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+.main{overflow-y:auto;background:var(--bg)}
+
+/* TOPBAR */
+.logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;letter-spacing:.5px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900}
+.logo span{color:var(--accent)}
+.topbar-meta{margin-left:auto;display:flex;align-items:center;gap:16px;color:var(--text2);font-size:12px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.tb-badge{background:var(--bg3);border:1px solid var(--border);padding:4px 10px;border-radius:20px;font-size:11px}
+#live-time{font-family:var(--mono);font-size:12px;color:var(--text2)}
+
+/* SIDEBAR */
+.nav-section{padding:12px 0 4px}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:1.2px;color:var(--text3);padding:0 16px 6px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 16px;cursor:pointer;color:var(--text2);transition:all .15s;border-left:2px solid transparent;font-size:13px;user-select:none}
+.nav-item:hover{color:var(--text);background:var(--bg3)}
+.nav-item.active{color:var(--accent);background:var(--glow);border-left-color:var(--accent);font-weight:500}
+.nav-item .ni{width:16px;text-align:center;font-size:14px}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:8px;min-width:16px;text-align:center}
+.nav-badge.blue{background:var(--accent)}
+.nav-badge.green{background:var(--green)}
+.sidebar-footer{margin-top:auto;padding:12px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);text-align:center}
+.auth-alert{margin:8px;padding:8px 10px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:6px;font-size:11px;color:#fca5a5}
+
+/* PAGES */
+.page{display:none;padding:20px}
+.page.active{display:block}
+
+/* HEADINGS */
+.page-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
+.page-sub{color:var(--text2);font-size:12px;margin-bottom:20px}
+.section-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
+.card-title{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+
+/* STAT TILES */
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:4px}
+.stat-val{font-size:28px;font-weight:800;line-height:1}
+.stat-label{font-size:11px;color:var(--text2)}
+.stat-sub{font-size:10px;color:var(--text3)}
+.stat.green .stat-val{color:var(--green)}
+.stat.blue .stat-val{color:var(--accent)}
+.stat.yellow .stat-val{color:var(--yellow)}
+.stat.red .stat-val{color:var(--red)}
+.stat.purple .stat-val{color:var(--accent2)}
+
+/* FAC (Founder Activity Centre) */
+.fac-header{background:linear-gradient(135deg,var(--bg3),var(--bg2));border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px}
+.fac-title{font-size:16px;font-weight:700}
+.fac-date{font-size:12px;color:var(--text2);margin-top:2px}
+.fac-session{margin-left:auto;font-size:11px;color:var(--text3);text-align:right}
+.fac-rows{display:flex;flex-direction:column;gap:8px}
+.fac-row{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:flex-start;gap:12px}
+.fac-icon{font-size:18px;min-width:24px;text-align:center;margin-top:1px}
+.fac-content h4{font-size:13px;font-weight:600;margin-bottom:3px}
+.fac-content p{font-size:12px;color:var(--text2);line-height:1.5}
+.fac-empty{color:var(--text3);font-size:12px;font-style:italic}
+.priority-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-right:6px}
+.p1{background:rgba(239,68,68,.2);color:#fca5a5}
+.p2{background:rgba(249,115,22,.2);color:#fdba74}
+.p3{background:rgba(234,179,8,.2);color:#fde047}
+
+/* TOOL REGISTRY */
+.tool-search{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;margin-bottom:16px}
+.tool-search:focus{border-color:var(--accent)}
+.tool-group{margin-bottom:20px}
+.tool-group-header{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;margin-bottom:8px;user-select:none}
+.tool-group-header:hover{border-color:var(--accent)}
+.tool-group-name{font-size:13px;font-weight:600;flex:1}
+.tool-count{font-size:11px;color:var(--text2);background:var(--bg4);padding:2px 8px;border-radius:10px}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.tool-card{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px 12px;cursor:pointer;transition:all .15s}
+.tool-card:hover{border-color:var(--accent);background:var(--bg4)}
+.tool-name{font-size:12px;font-weight:600;color:var(--accent);font-family:var(--mono);margin-bottom:3px}
+.tool-desc{font-size:11px;color:var(--text2);line-height:1.4}
+.tool-tag{display:inline-block;font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;margin-right:4px;margin-top:4px;text-transform:uppercase}
+.tag-r{background:rgba(34,197,94,.15);color:#86efac}
+.tag-w{background:rgba(239,68,68,.15);color:#fca5a5}
+.tag-ms{background:rgba(79,142,247,.15);color:#93c5fd}
+.tag-sp{background:rgba(124,95,247,.15);color:#c4b5fd}
+
+/* CONVERSATION */
+.convo-wrap{height:calc(100vh - 140px);display:flex;flex-direction:column;gap:12px}
+.convo-msgs{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:80%;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.6}
+.msg.user{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:3px}
+.msg.hamaya{align-self:flex-start;background:var(--bg3);border:1px solid var(--border);border-bottom-left-radius:3px}
+.msg.hamaya .msg-header{font-size:10px;font-weight:700;color:var(--accent);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.msg-ts{font-size:10px;color:var(--text3);margin-top:4px;text-align:right}
+.convo-input-row{display:flex;gap:10px;align-items:flex-end}
+.convo-input{flex:1;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;font-family:var(--font);outline:none;resize:none;min-height:48px;max-height:120px}
+.convo-input:focus{border-color:var(--accent)}
+.btn{padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:var(--font);transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#3a7fe8}
+.btn-ghost{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--accent)}
+.btn-danger{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.mode-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.pill{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.pill:hover,.pill.active{background:var(--glow);border-color:var(--accent);color:var(--accent)}
+
+/* REGISTERS */
+.reg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:20px}
+.reg-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;transition:all .15s}
+.reg-card:hover{border-color:var(--accent)}
+.reg-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.reg-id{font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:10px}
+.reg-stats{display:flex;gap:12px}
+.reg-stat{font-size:11px;color:var(--text2)}
+.reg-stat span{font-weight:700;color:var(--text)}
+.reg-status{display:inline-block;font-size:9px;padding:2px 6px;border-radius:3px;font-weight:700;margin-top:8px}
+.rs-ok{background:rgba(34,197,94,.15);color:#86efac}
+.rs-error{background:rgba(239,68,68,.15);color:#fca5a5}
+.rs-pending{background:rgba(234,179,8,.15);color:#fde047}
+
+/* HEALTH */
+.health-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.health-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.health-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.health-dot.ok{background:var(--green);box-shadow:0 0 6px var(--green)}
+.health-dot.warn{background:var(--yellow);box-shadow:0 0 6px var(--yellow)}
+.health-dot.err{background:var(--red);box-shadow:0 0 6px var(--red)}
+.health-name{font-size:13px;font-weight:500}
+.health-val{font-size:11px;color:var(--text2);margin-top:2px}
+
+/* KNOWLEDGE */
+.kn-file{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
+.kn-file:hover{border-color:var(--accent)}
+.kn-icon{font-size:20px}
+.kn-name{font-size:13px;font-weight:600}
+.kn-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.kn-size{margin-left:auto;font-size:11px;color:var(--text3);font-family:var(--mono)}
+
+/* PA FLOWS */
+.flow-row{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.flow-num{font-size:12px;font-weight:700;color:var(--accent);font-family:var(--mono);min-width:28px}
+.flow-name{font-size:13px;font-weight:600;flex:1}
+.flow-trigger{font-size:11px;color:var(--text2)}
+.flow-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px}
+.fs-pending{background:rgba(234,179,8,.15);color:#fde047}
+.fs-live{background:rgba(34,197,94,.15);color:#86efac}
+.fs-blocked{background:rgba(239,68,68,.15);color:#fca5a5}
+
+/* BUILD SEQ */
+.phase{margin-bottom:20px}
+.phase-title{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding:6px 12px;background:var(--glow);border-radius:6px;display:inline-block}
+.step-row{display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:4px;background:var(--bg2);border:1px solid var(--border);border-radius:6px}
+.step-num{font-size:11px;font-weight:700;color:var(--text3);font-family:var(--mono);min-width:24px}
+.step-text{font-size:12px;flex:1}
+.step-check{font-size:14px}
+
+/* ALERT BANNER */
+.alert-banner{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;margin-bottom:14px;font-size:12px;line-height:1.5}
+.alert-banner.red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
+.alert-banner.yellow{background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);color:#fde047}
+.alert-banner.green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac}
+.alert-icon{font-size:16px;margin-top:1px;flex-shrink:0}
+
+/* SCROLLBARS */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* TAG FILTER ROW */
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .shell{grid-template-columns:1fr;grid-template-rows:52px 48px 1fr}
+  .sidebar{flex-direction:row;overflow-x:auto;overflow-y:hidden;border-right:none;border-bottom:1px solid var(--border)}
+  .nav-section:first-child .nav-label,.sidebar-footer,.auth-alert{display:none}
+  .nav-item{padding:8px 12px;border-left:none;border-bottom:2px solid transparent;white-space:nowrap}
+  .nav-item.active{border-bottom-color:var(--accent);border-left-color:transparent}
+  .grid4{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">H</div>
+    <div>HAMAYA <span>Command Centre</span></div>
+  </div>
+  <div class="topbar-meta">
+    <div class="tb-badge"><span class="status-dot"></span></div>
+    <div class="tb-badge">FlyByTheWay</div>
+    <div class="tb-badge" id="session-badge">Morning</div>
+    <div id="live-time">--:--:--</div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="auth-alert">⚠️ Azure AD secret expired — registers offline. Fix in Azure Portal → App Registrations.</div>
+
+  <div class="nav-section">
+    <div class="nav-label">Command</div>
+    <div class="nav-item active" onclick="nav('fac')"><span class="ni">⚡</span> Activity Centre</div>
+    <div class="nav-item" onclick="nav('convo')"><span class="ni">💬</span> Conversation <span class="nav-badge blue">AI</span></div>
+    <div class="nav-item" onclick="nav('tools')"><span class="ni">🔧</span> Tool Registry <span class="nav-badge blue">200+</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Registers</div>
+    <div class="nav-item" onclick="nav('registers')"><span class="ni">📋</span> All Registers <span class="nav-badge" id="nb-reg">12</span></div>
+    <div class="nav-item" onclick="nav('flows')"><span class="ni">⚡</span> PA Flows <span class="nav-badge" id="nb-flows">7</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Intelligence</div>
+    <div class="nav-item" onclick="nav('health')"><span class="ni">💚</span> System Health</div>
+    <div class="nav-item" onclick="nav('knowledge')"><span class="ni">📚</span> Knowledge Base</div>
+    <div class="nav-item" onclick="nav('build')"><span class="ni">🏗️</span> Build Sequence</div>
+  </div>
+
+  <div class="sidebar-footer">
+    HAMAYA v2 · 2026-10-23<br>
+    FlyByTheWay · flybytheway.com
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- PAGE: FOUNDER ACTIVITY CENTRE -->
+  <div id="page-fac" class="page active">
+    <div class="page-title">⚡ Founder Activity Centre</div>
+    <div class="page-sub">HAMAYA session briefing · All registers · Action required items</div>
+
+    <div class="alert-banner red">
+      <span class="alert-icon">🔴</span>
+      <div><strong>P1 BLOCKER — Azure AD Client Secret Expired</strong><br>
+      All SharePoint registers are unreachable (AADSTS7000215). Action: Azure Portal → App Registrations → fa522084-ec0b-446d-b7ff-3cd2... → Certificates &amp; Secrets → Create new secret → Update in VPS .env file.<br>
+      Until fixed: 0/12 registers readable or writable.</div>
+    </div>
+
+    <div class="fac-header">
+      <div>
+        <div class="fac-title">HAMAYA — FOUNDER ACTIVITY CENTRE</div>
+        <div class="fac-date" id="fac-date">Loading...</div>
+      </div>
+      <div class="fac-session">Session: <span id="fac-session">--</span><br>Founder: Mayank (MAYA_VI)</div>
+    </div>
+
+    <div class="grid4" style="margin-bottom:16px">
+      <div class="stat red"><div class="stat-val">0</div><div class="stat-label">Open Decisions</div><div class="stat-sub">Registers offline</div></div>
+      <div class="stat yellow"><div class="stat-val">0</div><div class="stat-label">Open Risks</div><div class="stat-sub">Auth error</div></div>
+      <div class="stat red"><div class="stat-val">0</div><div class="stat-label">Escalations</div><div class="stat-sub">Auth error</div></div>
+      <div class="stat green"><div class="stat-val">0</div><div class="stat-label">Opportunities</div><div class="stat-sub">Auth error</div></div>
+    </div>
+
+    <div class="fac-rows">
+      <div class="fac-row">
+        <div class="fac-icon">⚡</div>
+        <div class="fac-content">
+          <h4>REQUIRES YOUR ACTION</h4>
+          <p><span class="priority-badge p1">P1</span>Fix Azure AD client secret — ALL registers are offline<br>
+          <span class="priority-badge p1">P1</span>Create 3 SharePoint lists (Decision Register, Opportunity Log, Knowledge Index)<br>
+          <span class="priority-badge p2">P2</span>Enable "Create flow" toggle in Power Platform connector settings<br>
+          <span class="priority-badge p3">P3</span>Complete Razorpay KYC (Merchant ID: TARYB9ksqJc8f7)</p>
+        </div>
+      </div>
+
+      <div class="fac-row">
+        <div class="fac-icon">📋</div>
+        <div class="fac-content">
+          <h4>OPEN DECISIONS</h4>
+          <p class="fac-empty">Registers offline — fix Azure AD secret to load decisions.</p>
+        </div>
+      </div>
+
+      <div class="fac-row">
+        <div class="fac-icon">🔴</div>
+        <div class="fac-content">
+          <h4>CRITICAL RISKS</h4>
+          <p class="fac-empty">Registers offline — fix Azure AD secret to load risks.</p>
+        </div>
+      </div>
+
+      <div class="fac-row">
+        <div class="fac-icon">🟢</div>
+        <div class="fac-content">
+          <h4>TOP OPPORTUNITIES</h4>
+          <p class="fac-empty">Registers offline — fix Azure AD secret to load opportunities.</p>
+        </div>
+      </div>
+
+      <div class="fac-row">
+        <div class="fac-icon">🤖</div>
+        <div class="fac-content">
+          <h4>AGENT INTELLIGENCE (Last 24h)</h4>
+          <p>FlyBrain: No new findings<br>
+          IRROPS Scout: No disruptions detected<br>
+          Watchdog: VPS healthy (up 3 days, RAM 2/12GB, disk 40%)<br>
+          SANDESHA/VIDHUR: No customer patterns logged</p>
+        </div>
+      </div>
+
+      <div class="fac-row">
+        <div class="fac-icon">🎯</div>
+        <div class="fac-content">
+          <h4>RECOMMENDED FOCUS TODAY</h4>
+          <p>1. Fix Azure AD client secret — unlocks all 12 registers<br>
+          2. Create 3 SharePoint lists — unlocks 7 PA flows<br>
+          3. Complete Razorpay KYC — unlocks live payment collection</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: CONVERSATION -->
+  <div id="page-convo" class="page">
+    <div class="page-title">💬 HAMAYA Conversation</div>
+    <div class="page-sub">AI conversation with HAMAYA · Decision · Planning · Intelligence · Escalation modes</div>
+
+    <div class="mode-pills">
+      <div class="pill active" onclick="setMode(this,'executive')">⚡ Executive</div>
+      <div class="pill" onclick="setMode(this,'decision')">📋 Decision</div>
+      <div class="pill" onclick="setMode(this,'planning')">📐 Planning</div>
+      <div class="pill" onclick="setMode(this,'intel')">🔍 Market Intel</div>
+      <div class="pill" onclick="setMode(this,'escalation')">🚨 Escalation</div>
+    </div>
+
+    <div class="convo-wrap">
+      <div class="convo-msgs" id="convo-msgs">
+        <div class="msg hamaya">
+          <div class="msg-header">HAMAYA · Digital Co-Founder</div>
+          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br>
+          HAMAYA — FOUNDER ACTIVITY CENTRE<br>
+          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br><br>
+          Good morning, Mayank.<br><br>
+          <strong>⚡ P1 ACTION REQUIRED:</strong> Azure AD client secret has expired. All 12 SharePoint registers are offline. This must be fixed before any register read or write operations can proceed.<br><br>
+          <strong>System Status:</strong> VPS healthy ✅ · BSP India connected ✅ · TIDS registered ✅<br><br>
+          Ready for your session. Which mode would you like to start in?<br>
+          Decision · Planning · Market Intel · Escalation · Operational
+          <div class="msg-ts" id="convo-ts-init"></div>
+        </div>
+      </div>
+
+      <div class="convo-input-row">
+        <textarea class="convo-input" id="convo-input" placeholder="Type your message to HAMAYA... (Shift+Enter for new line)" rows="2"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendConvoMsg()}"
+        ></textarea>
+        <button class="btn btn-primary" onclick="sendConvoMsg()">Send ▶</button>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px">
+        💡 This is the HAMAYA Command Centre interface. Connect your Copilot Studio Direct Line token in Settings to enable live AI responses.
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: TOOL REGISTRY -->
+  <div id="page-tools" class="page">
+    <div class="page-title">🔧 Tool Registry</div>
+    <div class="page-sub">All 200+ tools available to HAMAYA · Organised by server group</div>
+
+    <div class="grid4" style="margin-bottom:16px">
+      <div class="stat blue"><div class="stat-val" id="tool-total">213</div><div class="stat-label">Total Tools</div></div>
+      <div class="stat green"><div class="stat-val">9</div><div class="stat-label">MCP Servers</div></div>
+      <div class="stat green"><div class="stat-val">5</div><div class="stat-label">Live on VPS</div></div>
+      <div class="stat yellow"><div class="stat-val">4</div><div class="stat-label">Auth Required</div></div>
+    </div>
+
+    <input class="tool-search" id="tool-search" placeholder="🔍  Search tools by name or description..." oninput="filterTools(this.value)">
+
+    <div class="filter-row">
+      <div class="pill active" onclick="filterGroup(this,'all')">All Groups</div>
+      <div class="pill" onclick="filterGroup(this,'vps')">VPS</div>
+      <div class="pill" onclick="filterGroup(this,'supabase')">Supabase</div>
+      <div class="pill" onclick="filterGroup(this,'registers')">Registers</div>
+      <div class="pill" onclick="filterGroup(this,'pa')">Power Automate</div>
+      <div class="pill" onclick="filterGroup(this,'hostinger')">Hostinger</div>
+      <div class="pill" onclick="filterGroup(this,'ms365')">Microsoft 365</div>
+      <div class="pill" onclick="filterGroup(this,'github')">GitHub</div>
+    </div>
+
+    <div id="tool-registry"></div>
+  </div>
+
+  <!-- PAGE: REGISTERS -->
+  <div id="page-registers" class="page">
+    <div class="page-title">📋 SharePoint Registers</div>
+    <div class="page-sub">All 12 HAMAYA registers · Site: flybytheway.sharepoint.com/sites/ops</div>
+
+    <div class="alert-banner red">
+      <span class="alert-icon">🔴</span>
+      <div><strong>Auth Error:</strong> AADSTS7000215 — Invalid client secret. All register counts show 0. Fix the Azure AD secret to restore live data.</div>
+    </div>
+
+    <div class="reg-grid" id="reg-grid"></div>
+  </div>
+
+  <!-- PAGE: PA FLOWS -->
+  <div id="page-flows" class="page">
+    <div class="page-title">⚡ Power Automate Flows</div>
+    <div class="page-sub">7 flows planned · Build blocked on SharePoint lists + connector toggle</div>
+
+    <div class="alert-banner yellow">
+      <span class="alert-icon">⚠️</span>
+      <div><strong>Build Prerequisite:</strong> SharePoint lists must be created BEFORE flows that write to them. Verify each list in SharePoint before starting the corresponding flow.</div>
+    </div>
+
+    <div id="flow-list"></div>
+  </div>
+
+  <!-- PAGE: SYSTEM HEALTH -->
+  <div id="page-health" class="page">
+    <div class="page-title">💚 System Health</div>
+    <div class="page-sub">Live VPS status · Services · Endpoints</div>
+
+    <div class="grid3" style="margin-bottom:16px">
+      <div class="stat green"><div class="stat-val">3d</div><div class="stat-label">VPS Uptime</div><div class="stat-sub">19h 26m</div></div>
+      <div class="stat green"><div class="stat-val">18%</div><div class="stat-label">RAM Usage</div><div class="stat-sub">2.2 / 12 GB</div></div>
+      <div class="stat green"><div class="stat-val">40%</div><div class="stat-label">Disk Usage</div><div class="stat-sub">76 / 193 GB</div></div>
+    </div>
+
+    <div class="section-title">Services</div>
+    <div class="health-grid" style="margin-bottom:20px">
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">VPS (Contabo)</div><div class="health-val">Ubuntu 24.04 · 6.8.0-146</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">Nginx</div><div class="health-val">Active · 5 sites configured</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">PM2 Process Manager</div><div class="health-val">Running</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">MCP Server — VPS (8101)</div><div class="health-val">Live · SSL active</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">MCP Server — Gov (8102)</div><div class="health-val">Live · SSL active</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">MCP Server — MS365 (8104)</div><div class="health-val">Live · Auth error</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">MCP Server — Supabase (8105)</div><div class="health-val">Live · SSL active</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">MCP Server — PA (8106)</div><div class="health-val">Live · SSL active</div></div></div>
+      <div class="health-item"><div class="health-dot err"></div><div><div class="health-name">Azure AD Auth</div><div class="health-val">AADSTS7000215 — Secret expired</div></div></div>
+      <div class="health-item"><div class="health-dot warn"></div><div><div class="health-name">Razorpay KYC</div><div class="health-val">In progress — gated</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">BSP India</div><div class="health-val">Connected ✅ — billing active</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">TIDS</div><div class="health-val">Registered ✅</div></div></div>
+    </div>
+
+    <div class="section-title">Portal Endpoints</div>
+    <div class="health-grid">
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">HAMAYA Portal</div><div class="health-val">:8282 · Port 80 alias /hamaya</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">HAMAYA Mobile</div><div class="health-val">:8201</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">API Endpoint</div><div class="health-val">:3009 · H@MAYA Core :8200</div></div></div>
+      <div class="health-item"><div class="health-dot ok"></div><div><div class="health-name">Hostinger (Web)</div><div class="health-val">flybytheway.com</div></div></div>
+    </div>
+  </div>
+
+  <!-- PAGE: KNOWLEDGE BASE -->
+  <div id="page-knowledge" class="page">
+    <div class="page-title">📚 Knowledge Base</div>
+    <div class="page-sub">HAMAYA domain knowledge files · GDS · Fares · Competitors · Systems</div>
+
+    <div class="section-title">Claude Code Knowledge Files</div>
+    <div id="kn-list"></div>
+
+    <div class="section-title" style="margin-top:20px">Copilot Studio Knowledge Files</div>
+    <div id="kn-studio"></div>
+
+    <div class="alert-banner green" style="margin-top:16px">
+      <span class="alert-icon">✅</span>
+      <div>All 7 uploaded knowledge files have been ingested into the Claude Code knowledge base. Upload new files via the Claude Code session to update HAMAYA's knowledge.</div>
+    </div>
+  </div>
+
+  <!-- PAGE: BUILD SEQUENCE -->
+  <div id="page-build" class="page">
+    <div class="page-title">🏗️ Build Sequence</div>
+    <div class="page-sub">20-step deployment sequence · Phases 1-5 · HAMAYA full activation</div>
+
+    <div class="grid4" style="margin-bottom:16px">
+      <div class="stat red"><div class="stat-val">0</div><div class="stat-label">Steps Done</div></div>
+      <div class="stat yellow"><div class="stat-val">20</div><div class="stat-label">Steps Total</div></div>
+      <div class="stat yellow"><div class="stat-val">P1</div><div class="stat-label">Azure AD Fix</div></div>
+      <div class="stat blue"><div class="stat-val">17</div><div class="stat-label">Test Target</div></div>
+    </div>
+
+    <div id="build-seq"></div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+// ─── NAV ───────────────────────────────────────────────────────────────────
+function nav(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ─── CLOCK ─────────────────────────────────────────────────────────────────
+function updateClock(){
+  const now=new Date();
+  document.getElementById('live-time').textContent=now.toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour12:false});
+  const h=now.getHours();
+  const sess=h<12?'Morning':h<17?'Afternoon':h<21?'Evening':'Night';
+  document.getElementById('session-badge').textContent=sess;
+  document.getElementById('fac-session').textContent=sess;
+  document.getElementById('fac-date').textContent='Date: '+now.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Asia/Kolkata'})+' IST';
+  document.getElementById('convo-ts-init').textContent=now.toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour12:true});
+}
+setInterval(updateClock,1000);updateClock();
+
+// ─── CONVO ─────────────────────────────────────────────────────────────────
+let currentMode='executive';
+function setMode(el,mode){
+  document.querySelectorAll('.mode-pills .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');currentMode=mode;
+}
+const hamayaResponses={
+  executive:"Understood. I'm operating in Executive Partnership mode. Every response will improve strategic awareness, accountability, or operational clarity. What do you need to resolve today?",
+  decision:"Decision mode active. For any decision, I'll provide: Decision Summary · Options · Pros/Cons · Risks · Dependencies · Recommended Path. What decision are we working on?",
+  planning:"Planning mode active. Output will include: Objectives · Milestones · Dependencies · Risks · Owners · Checkpoints. What are we planning?",
+  intel:"Market Intelligence mode active. I'll run the 4-step framework: 1. Assess → 2. Score (1-5 Threat/Opportunity) → 3. Decide (ACT NOW / WATCH / IGNORE) → 4. Register. Which competitor or market event are we analysing?",
+  escalation:"Escalation mode active. I will surface immediately, state severity and impact, recommend immediate action, and track to resolution. What is the escalation?"
+};
+function sendConvoMsg(){
+  const inp=document.getElementById('convo-input');
+  const val=inp.value.trim();if(!val)return;
+  const msgs=document.getElementById('convo-msgs');
+  const now=new Date().toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour12:true});
+  msgs.innerHTML+=`<div class="msg user">${escHtml(val)}<div class="msg-ts">${now}</div></div>`;
+  inp.value='';
+  setTimeout(()=>{
+    const resp=hamayaResponses[currentMode]||'Message received. Processing...';
+    msgs.innerHTML+=`<div class="msg hamaya"><div class="msg-header">HAMAYA · ${currentMode.toUpperCase()}</div>${resp}<div class="msg-ts">${new Date().toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour12:true})}</div></div>`;
+    msgs.scrollTop=msgs.scrollHeight;
+  },800);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ─── TOOL REGISTRY ─────────────────────────────────────────────────────────
+const TOOLS=[
+  {g:'vps',gn:'VPS Commander (FBTW-MCP-Server)',tools:[
+    {n:'vps_status',d:'Uptime, load, memory, disk, kernel and OS',t:['r']},
+    {n:'vps_run_command',d:'Execute shell command on the VPS',t:['w']},
+    {n:'vps_read_file',d:'Read a file from the VPS filesystem',t:['r']},
+    {n:'vps_write_file',d:'Write a file to the VPS filesystem',t:['w']},
+    {n:'vps_list_directory',d:'List files and directories on VPS',t:['r']},
+    {n:'vps_list_hosts',d:'List configured VPS hosts',t:['r']},
+    {n:'vps_list_processes',d:'List running processes on VPS',t:['r']},
+    {n:'vps_tail_log',d:'Tail a log file on the VPS',t:['r']},
+    {n:'vps_download_file',d:'Download a file from the VPS',t:['r']},
+    {n:'vps_upload_file',d:'Upload a file to the VPS',t:['w']},
+    {n:'vps_docker_ps',d:'List running Docker containers',t:['r']},
+    {n:'vps_service',d:'Manage a service (start/stop/restart/status)',t:['w']},
+    {n:'vps_disconnect',d:'Disconnect active VPS session',t:['w']},
+    {n:'get_vps_system_status',d:'Full system status — PM2, nginx, memory, disk',t:['r']},
+    {n:'get_pm2_status',d:'PM2 process manager status and logs',t:['r']},
+  ]},
+  {g:'supabase',gn:'Supabase Database (FBTW-MCP-Server)',tools:[
+    {n:'supabase_select',d:'SELECT rows from any Supabase table',t:['r']},
+    {n:'supabase_insert_row',d:'INSERT a new row into a Supabase table',t:['w']},
+    {n:'supabase_update_row',d:'UPDATE an existing row by ID',t:['w']},
+    {n:'supabase_upsert_row',d:'UPSERT — insert or update a row',t:['w']},
+    {n:'supabase_delete_row',d:'DELETE a row by ID',t:['w']},
+    {n:'supabase_list_tables',d:'List all tables in the Supabase project',t:['r']},
+    {n:'supabase_describe_table',d:'Get schema of a specific table',t:['r']},
+    {n:'supabase_row_count',d:'Count rows in a table with optional filter',t:['r']},
+    {n:'supabase_health',d:'Check Supabase connection health',t:['r']},
+    {n:'supabase_list_registers',d:'List all register tables in Supabase',t:['r']},
+    {n:'read_supabase',d:'Read data from Supabase with filter options',t:['r']},
+    {n:'get_supabase_scan_stats',d:'Supabase query scan statistics',t:['r']},
+  ]},
+  {g:'registers',gn:'Register & Governance Tools (FBTW-MCP-Server)',tools:[
+    {n:'log_decision',d:'Log a decision to the Decision Register',t:['w']},
+    {n:'log_risk',d:'Log a risk to the Risk Register',t:['w']},
+    {n:'log_opportunity',d:'Log an opportunity to the Opportunity Register',t:['w']},
+    {n:'log_commitment',d:'Log a commitment to the Commitment Register',t:['w']},
+    {n:'log_project',d:'Log a project to the Project Register',t:['w']},
+    {n:'log_escalation',d:'Log an escalation to the Escalation Register',t:['w']},
+    {n:'log_discussion',d:'Log an open discussion',t:['w']},
+    {n:'log_founder_activity',d:'Log founder activity entry',t:['w']},
+    {n:'log_intelligence',d:'Log an intelligence item from an agent',t:['w']},
+    {n:'read_register',d:'Read items from any register with filters',t:['r']},
+    {n:'update_item',d:'Update an existing register item',t:['w']},
+    {n:'close_item',d:'Close/archive a register item',t:['w']},
+    {n:'link_records',d:'Link two register records together',t:['w']},
+    {n:'audit_registers',d:'Audit all registers for consistency',t:['r']},
+    {n:'get_register_schema',d:'Get the column schema of a register',t:['r']},
+    {n:'get_founder_activity_centre',d:'Founder Activity Centre — all registers summary',t:['r']},
+    {n:'classify_notification',d:'Classify a notification (P1-P5)',t:['r']},
+  ]},
+  {g:'pa',gn:'Power Automate Flows (FBTW-MCP-Server + PA Server)',tools:[
+    {n:'list_flows',d:'List all Power Automate flows',t:['r']},
+    {n:'create_flow',d:'Create a new Power Automate flow',t:['w']},
+    {n:'update_flow',d:'Update an existing flow definition',t:['w']},
+    {n:'patch_flow',d:'Patch specific parts of a flow',t:['w']},
+    {n:'delete_flow',d:'Delete a Power Automate flow',t:['w']},
+    {n:'get_flow_definition',d:'Get the JSON definition of a flow',t:['r']},
+    {n:'get_flow_runs',d:'Get recent run history for a flow',t:['r']},
+    {n:'set_flow_state',d:'Enable or disable a flow',t:['w']},
+    {n:'get_connection_references',d:'Get connection references used by flows',t:['r']},
+    {n:'trigger_power_automate',d:'Manually trigger a Power Automate flow',t:['w']},
+    {n:'sync_automation_registry',d:'Sync automation status to registry',t:['w']},
+  ]},
+  {g:'hostinger',gn:'Hostinger (DNS · Domains · VPS · Hosting)',tools:[
+    {n:'hostinger_dns_list',d:'List DNS records for a domain',t:['r']},
+    {n:'hostinger_dns_update',d:'Update a DNS record',t:['w']},
+    {n:'hostinger_dns_delete',d:'Delete a DNS record',t:['w']},
+    {n:'hostinger_dns_reset',d:'Reset DNS to default',t:['w']},
+    {n:'hostinger_dns_validate',d:'Validate DNS configuration',t:['r']},
+    {n:'hostinger_domains_list',d:'List all domains in account',t:['r']},
+    {n:'hostinger_domains_transfers',d:'Domain transfer status',t:['r']},
+    {n:'hostinger_hosting_websites',d:'List Hostinger hosting websites',t:['r']},
+    {n:'hostinger_hosting_ssl_status',d:'Check SSL certificate status',t:['r']},
+    {n:'hostinger_hosting_subdomains',d:'List subdomains for hosting',t:['r']},
+    {n:'hostinger_vps_list',d:'List VPS instances',t:['r']},
+    {n:'hostinger_vps_get',d:'Get VPS details',t:['r']},
+    {n:'hostinger_vps_start',d:'Start a VPS',t:['w']},
+    {n:'hostinger_vps_stop',d:'Stop a VPS',t:['w']},
+    {n:'hostinger_vps_restart',d:'Restart a VPS',t:['w']},
+    {n:'hostinger_vps_metrics',d:'VPS performance metrics',t:['r']},
+    {n:'hostinger_vps_datacenters',d:'List available datacenters',t:['r']},
+    {n:'hostinger_vps_firewall_list',d:'List VPS firewall rules',t:['r']},
+    {n:'hostinger_vps_ssh_keys',d:'List SSH keys for VPS',t:['r']},
+    {n:'hostinger_billing_subscriptions',d:'Billing and subscription status',t:['r']},
+  ]},
+  {g:'ms365',gn:'Microsoft 365 (SharePoint · Outlook · Teams)',tools:[
+    {n:'sharepoint_search',d:'Search SharePoint for items',t:['r','ms']},
+    {n:'sharepoint_create_folder',d:'Create a folder in SharePoint',t:['w','ms']},
+    {n:'sharepoint_upload_file',d:'Upload a file to SharePoint',t:['w','ms']},
+    {n:'sharepoint_update_file',d:'Update an existing SharePoint file',t:['w','ms']},
+    {n:'sharepoint_delete_item',d:'Delete a SharePoint item',t:['w','ms']},
+    {n:'sharepoint_move_item',d:'Move a SharePoint item',t:['w','ms']},
+    {n:'sharepoint_rename_item',d:'Rename a SharePoint item',t:['w','ms']},
+    {n:'sharepoint_copy_item',d:'Copy a SharePoint item',t:['w','ms']},
+    {n:'sharepoint_folder_search',d:'Search within a SharePoint folder',t:['r','ms']},
+    {n:'outlook_send_mail',d:'Send an email via Outlook',t:['w','ms']},
+    {n:'outlook_email_search',d:'Search emails in Outlook',t:['r','ms']},
+    {n:'outlook_create_draft',d:'Create a draft email',t:['w','ms']},
+    {n:'outlook_create_event',d:'Create a calendar event',t:['w','ms']},
+    {n:'outlook_calendar_search',d:'Search calendar events',t:['r','ms']},
+    {n:'teams_send_chat_message',d:'Send a Teams chat message',t:['w','ms']},
+    {n:'teams_send_channel_message',d:'Send a Teams channel message',t:['w','ms']},
+    {n:'teams_list_channels',d:'List Teams channels',t:['r','ms']},
+    {n:'get_me',d:'Get current Microsoft 365 user info',t:['r','ms']},
+    {n:'search_people',d:'Search for people in Microsoft 365',t:['r','ms']},
+  ]},
+  {g:'reports',gn:'Reports & Documents (FBTW-MCP-Server)',tools:[
+    {n:'generate_review',d:'Generate a review document',t:['r']},
+    {n:'create_excel_report',d:'Create an Excel report file',t:['w']},
+    {n:'create_daily_report_xlsx',d:'Generate daily XLSX report',t:['w']},
+    {n:'generate_and_stream_pdf',d:'Generate and stream a PDF document',t:['w']},
+    {n:'create_sharepoint_document',d:'Create a document in SharePoint',t:['w','ms']},
+    {n:'create_command_center_page',d:'Create a command centre page',t:['w']},
+    {n:'create_register_list',d:'Create a SharePoint register list',t:['w','ms']},
+    {n:'ensure_columns',d:'Ensure SharePoint list has required columns',t:['w','ms']},
+    {n:'get_latest_brief',d:'Get the latest HAMAYA morning brief',t:['r']},
+    {n:'get_flybrain_logs',d:'Get FlyBrain intelligence feed logs',t:['r']},
+  ]},
+  {g:'universe',gn:'Universe & Intelligence (FBTW-MCP-Server)',tools:[
+    {n:'list_universe',d:'List universe entities by layer/priority/relation',t:['r']},
+    {n:'query_universe_entity',d:'Query a specific universe entity',t:['r']},
+    {n:'sync_universe_to_competitor_register',d:'Sync universe to Competitor Intelligence Register',t:['w']},
+    {n:'get_api_health',d:'Check all API endpoints health',t:['r']},
+  ]},
+  {g:'github',gn:'GitHub (Code · PRs · Issues · Actions)',tools:[
+    {n:'get_file_contents',d:'Get file contents from a GitHub repository',t:['r']},
+    {n:'create_or_update_file',d:'Create or update a file in GitHub',t:['w']},
+    {n:'push_files',d:'Push multiple files to GitHub',t:['w']},
+    {n:'list_branches',d:'List branches in a repository',t:['r']},
+    {n:'create_branch',d:'Create a new branch',t:['w']},
+    {n:'list_pull_requests',d:'List pull requests',t:['r']},
+    {n:'create_pull_request',d:'Create a new pull request',t:['w']},
+    {n:'pull_request_read',d:'Read PR details and diff',t:['r']},
+    {n:'list_issues',d:'List issues in a repository',t:['r']},
+    {n:'issue_read',d:'Read a GitHub issue',t:['r']},
+    {n:'issue_write',d:'Create or update an issue',t:['w']},
+    {n:'list_commits',d:'List recent commits',t:['r']},
+    {n:'get_commit',d:'Get a specific commit',t:['r']},
+    {n:'search_code',d:'Search code across repositories',t:['r']},
+    {n:'actions_list',d:'List GitHub Actions workflows',t:['r']},
+    {n:'actions_get',d:'Get a workflow run',t:['r']},
+    {n:'get_me',d:'Get authenticated GitHub user info',t:['r']},
+  ]},
+];
+
+let activeGroup='all';
+function renderTools(filter,group){
+  const container=document.getElementById('tool-registry');
+  let html='';let total=0;
+  TOOLS.forEach(g=>{
+    if(group!=='all'&&g.g!==group)return;
+    const filtered=g.tools.filter(t=>!filter||(t.n.includes(filter)||t.d.toLowerCase().includes(filter.toLowerCase())));
+    if(!filtered.length)return;
+    total+=filtered.length;
+    html+=`<div class="tool-group"><div class="tool-group-header"><span class="tool-group-name">${g.gn}</span><span class="tool-count">${filtered.length} tools</span></div><div class="tool-grid">`;
+    filtered.forEach(t=>{
+      const tags=t.t.map(tag=>{
+        if(tag==='r')return'<span class="tool-tag tag-r">READ</span>';
+        if(tag==='w')return'<span class="tool-tag tag-w">WRITE</span>';
+        if(tag==='ms')return'<span class="tool-tag tag-ms">MS365</span>';
+        if(tag==='sp')return'<span class="tool-tag tag-sp">SP</span>';
+        return'';
+      }).join('');
+      html+=`<div class="tool-card"><div class="tool-name">${t.n}</div><div class="tool-desc">${t.d}</div><div>${tags}</div></div>`;
+    });
+    html+='</div></div>';
+  });
+  container.innerHTML=html;
+  document.getElementById('tool-total').textContent=total;
+}
+function filterTools(v){renderTools(v,activeGroup);}
+function filterGroup(el,g){
+  document.querySelectorAll('.filter-row .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');activeGroup=g;
+  renderTools(document.getElementById('tool-search').value,g);
+}
+renderTools('','all');
+
+// ─── REGISTERS ─────────────────────────────────────────────────────────────
+const REGISTERS=[
+  {n:'HAMAYA_Risk_Register',id:'RSK-',desc:'All threats — API, Operational, Revenue, Technology',cols:7},
+  {n:'HAMAYA_Decision_Register',id:'DEC-',desc:'All strategic decisions',cols:8},
+  {n:'HAMAYA_Escalation_Register',id:'ESC-',desc:'All urgent matters requiring attention',cols:8},
+  {n:'HAMAYA_OPPORTUNITY REGISTER',id:'OPP-',desc:'All upside — Partnerships, Automation, Features',cols:8},
+  {n:'HAMAYA_Project_Register',id:'PRJ-',desc:'All projects and milestones',cols:10},
+  {n:'HAMAYA_Commitment_Register',id:'COM-',desc:'All promises and obligations',cols:10},
+  {n:'HAMAYA_Founder_Activity_Register',id:'ACT-',desc:'Founder activity and task tracking',cols:9},
+  {n:'HAMAYA_Agent_Intelligence_Register',id:'INT-',desc:'Intelligence from FlyBrain, Watchdog, IRROPS Scout, VIDHUR',cols:11},
+  {n:'Competitors_Intelligence_Register',id:'CMP-',desc:'Competitor monitoring — 8 companies, daily/weekly/monthly',cols:9},
+  {n:'HAMAYA_Discussion_Register',id:'DIS-',desc:'Open discussions before they become decisions',cols:7},
+  {n:'HAMAYA_Action_Register',id:'ACT-',desc:'Tasks, milestones and action items',cols:14},
+  {n:'HAMAYA_Policy_Register',id:'POL-',desc:'Policies, protocols and governance rules',cols:13},
+];
+const regGrid=document.getElementById('reg-grid');
+REGISTERS.forEach(r=>{
+  regGrid.innerHTML+=`<div class="reg-card">
+    <div class="reg-name">${r.n}</div>
+    <div class="reg-id">${r.id}YYYY-NNN · ${r.cols} cols</div>
+    <div class="reg-stats">
+      <div class="reg-stat">Total: <span>0</span></div>
+      <div class="reg-stat">Open: <span>0</span></div>
+    </div>
+    <div class="reg-status rs-error">AUTH ERROR</div>
+  </div>`;
+});
+
+// ─── PA FLOWS ──────────────────────────────────────────────────────────────
+const FLOWS=[
+  {n:1,name:'Daily Morning Brief',trigger:'Scheduled 6:00 AM IST weekdays',dep:'Lists 1+2',status:'pending'},
+  {n:2,name:'Decision Register Write',trigger:'HTTP from Copilot Studio',dep:'List 1 (Decision)',status:'pending'},
+  {n:3,name:'Opportunity Log Write',trigger:'HTTP from Copilot Studio',dep:'List 2 (Opportunity)',status:'pending'},
+  {n:4,name:'IRROPS Scout',trigger:'Scheduled every 4 hours',dep:'FlightAware API',status:'pending'},
+  {n:5,name:'FlyBrain Intelligence Feed',trigger:'Scheduled 7:00 AM IST daily',dep:'Intelligence source',status:'pending'},
+  {n:6,name:'Health Watchdog',trigger:'Scheduled every 30 minutes',dep:'Standalone',status:'pending'},
+  {n:7,name:'VIDHUR Escalation Bridge',trigger:'HTTP from VIDHUR chatbot',dep:'VIDHUR HTTP config',status:'pending'},
+];
+const flowList=document.getElementById('flow-list');
+FLOWS.forEach(f=>{
+  flowList.innerHTML+=`<div class="flow-row">
+    <div class="flow-num">F${f.n}</div>
+    <div><div class="flow-name">${f.name}</div><div class="flow-trigger">${f.trigger} · Dep: ${f.dep}</div></div>
+    <div class="flow-status fs-pending">PENDING BUILD</div>
+  </div>`;
+});
+
+// ─── KNOWLEDGE FILES ───────────────────────────────────────────────────────
+const KN_FILES=[
+  {icon:'⚖️',n:'hamaya-constitution.md',desc:'HAMAYA system prompt v2 · 12 register schemas · 7 rules · Guardrails',size:'~80KB'},
+  {icon:'🏢',n:'hamaya-systems.md',desc:'VPS status · 7 PA flow specs · Build sequence · Notification levels',size:'~45KB'},
+  {icon:'🏆',n:'hamaya-competitors.md',desc:'8 competitors · Gap matrix · FBTW moat · Survival strategy · Regulatory',size:'~22KB'},
+  {icon:'✈️',n:'hamaya-gds-knowledge.md',desc:'GDS commands Amadeus/Galileo/Sabre · IATA 5.18 · NDC · Fare families',size:'~38KB'},
+  {icon:'📐',n:'india-compliance.md',desc:'India travel compliance · GST · DGCA · IATA India rules',size:'~12KB'},
+  {icon:'🛫',n:'carrier-policies.md',desc:'Airline policies · Fare rules · Alliance structure',size:'~18KB'},
+  {icon:'🔧',n:'tool-reference.md',desc:'200+ tools · 9 MCP server groups · Full reference',size:'~30KB'},
+];
+const knList=document.getElementById('kn-list');
+KN_FILES.forEach(f=>{
+  knList.innerHTML+=`<div class="kn-file">
+    <div class="kn-icon">${f.icon}</div>
+    <div><div class="kn-name">${f.n}</div><div class="kn-meta">${f.desc}</div></div>
+    <div class="kn-size">${f.size}</div>
+  </div>`;
+});
+document.getElementById('kn-studio').innerHTML=`
+  <div class="kn-file"><div class="kn-icon">📋</div><div><div class="kn-name">HAMAYA_Self_Knowledge.txt</div><div class="kn-meta">Identity · Capabilities · Honesty rules · Auto-logging triggers</div></div><div class="kn-size">Uploaded Sep 2026</div></div>
+  <div class="kn-file"><div class="kn-icon">🏢</div><div><div class="kn-name">HAMAYA_FBTW_Context.txt</div><div class="kn-meta">Company identity · Accreditations · Tech stack · Operational status</div></div><div class="kn-size">Uploaded Sep 2026</div></div>
+  <div class="kn-file"><div class="kn-icon">⚙️</div><div><div class="kn-name">HAMAYA_Operations_Reference.txt</div><div class="kn-meta">SharePoint schemas · PA flow specs · Build sequence</div></div><div class="kn-size">Uploaded Sep 2026</div></div>
+  <div class="kn-file"><div class="kn-icon">🏆</div><div><div class="kn-name">HAMAYA_Intelligence_Reference.txt</div><div class="kn-meta">8 competitors · Regulatory framework · GDS landscape</div></div><div class="kn-size">Uploaded Sep 2026</div></div>
+  <div class="kn-file"><div class="kn-icon">✈️</div><div><div class="kn-name">HAMAYA_Knowledge_Base_GDS_NDC_Fares.md</div><div class="kn-meta">811KB · Books 0-3 · IATA 5.18 · Amadeus/Galileo/Sabre · NDC</div></div><div class="kn-size">Uploaded Oct 2026</div></div>
+  <div class="kn-file"><div class="kn-icon">📖</div><div><div class="kn-name">HAMAYA_Copilot_Studio_Complete_System_Prompt_v2.md</div><div class="kn-meta">Complete system prompt · Groups A-Z · 21 sections</div></div><div class="kn-size">Updated Oct 10 2026</div></div>
+`;
+
+// ─── BUILD SEQUENCE ─────────────────────────────────────────────────────────
+const PHASES=[
+  {name:'Phase 1 — SharePoint First',steps:[
+    {n:1,t:'Create HAMAYA_Decision_Register in SharePoint',done:false},
+    {n:2,t:'Create HAMAYA_Opportunity_Log in SharePoint',done:false},
+    {n:3,t:'Create HAMAYA_Knowledge_Index in SharePoint',done:false},
+  ]},
+  {name:'Phase 2 — Copilot Studio Topics',steps:[
+    {n:4,t:'Build T1: Morning Brief Request',done:false},
+    {n:5,t:'Build T2: Decision Register Entry',done:false},
+    {n:6,t:'Build T3: Opportunity Log Entry',done:false},
+    {n:7,t:'Build T4: Competitive Intelligence Query',done:false},
+    {n:8,t:'Build T5: Risk & Compliance Query',done:false},
+    {n:9,t:'Build T6: Founder Activity Summary',done:false},
+    {n:10,t:'Build T7: VIDHUR Escalation Handoff',done:false},
+  ]},
+  {name:'Phase 3 — Enable Connector',steps:[
+    {n:11,t:'Enable "Create flow" toggle in FBTW-MCP-Server connector settings in Power Platform',done:false},
+  ]},
+  {name:'Phase 4 — Power Automate',steps:[
+    {n:12,t:'Build Flow 2 (Decision Register Write) — depends on List 1',done:false},
+    {n:13,t:'Build Flow 3 (Opportunity Log Write) — depends on List 2',done:false},
+    {n:14,t:'Build Flow 1 (Morning Brief) — depends on Lists 1 and 2',done:false},
+    {n:15,t:'Build Flow 6 (Health Watchdog) — standalone',done:false},
+    {n:16,t:'Build Flow 4 (IRROPS Scout) — needs API source configured',done:false},
+    {n:17,t:'Build Flow 5 (FlyBrain) — needs intelligence source configured',done:false},
+    {n:18,t:'Build Flow 7 (VIDHUR Bridge) — depends on VIDHUR HTTP config',done:false},
+  ]},
+  {name:'Phase 5 — Verify',steps:[
+    {n:19,t:'Run evaluation on HAMAYA (17 conversations, both test methods)',done:false},
+    {n:20,t:'Target: 17/17 Answer Quality + 17/17 Trustworthiness',done:false},
+  ]},
+];
+const buildSeq=document.getElementById('build-seq');
+PHASES.forEach(p=>{
+  let stepsHtml='';
+  p.steps.forEach(s=>{
+    stepsHtml+=`<div class="step-row">
+      <div class="step-num">${s.n}</div>
+      <div class="step-text">${s.t}</div>
+      <div class="step-check">${s.done?'✅':'⬜'}</div>
+    </div>`;
+  });
+  buildSeq.innerHTML+=`<div class="phase"><div class="phase-title">${p.name}</div>${stepsHtml}</div>`;
+});
+</script>
+</body>
+</html>
