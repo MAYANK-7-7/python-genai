@@ -1,254 +1,214 @@
-# HAMAYA — Microsoft & Google Tool Index
-> Every tool gained per connector, MCP server, or artifact. One source of truth.
+# HAMAYA Marketing Toolbox — Complete Tool Index
+> All tools across Digital, SEO, Traditional, and Ops. Status per tool. Source per tool.
 
 ---
 
-## MICROSOFT
-
-### 1. Microsoft 365 Connector — Claude.ai (`mcp__Microsoft_365__*`)
-~40 tools across five surfaces:
-
-| Surface | Tools |
+## STATUS KEY
+| Symbol | Meaning |
 |---|---|
-| **Outlook Email** | email_search, send_mail, create_draft, reply_draft, reply_all_draft, forward_mail, update_draft, delete_draft, batch_delete_messages, batch_modify_labels, modify_labels, modify_thread_labels, create_label, update_label, delete_label, create_filter, delete_filter, set_vacation, trash_thread, untrash_thread |
-| **Teams** | list_teams, list_channels, list_channel_messages, list_chats, send_channel_message, reply_channel_message, create_chat, send_chat_message, chat_message_search |
-| **SharePoint** | sharepoint_search, sharepoint_folder_search, sharepoint_upload_file, sharepoint_update_file, sharepoint_create_folder, sharepoint_copy_item, sharepoint_move_item, sharepoint_rename_item, sharepoint_delete_item |
-| **Calendar** | outlook_calendar_search, create_event, update_event, delete_event, respond_to_event, find_meeting_availability, outlook_find_available_time |
-| **People / Me** | get_me, search_people, get_granted_scopes, read_resource |
+| ✅ Connected | Live connector in Claude.ai session — tools available now |
+| 🔶 Partial | Connector present but config incomplete |
+| 🔴 Offline | Connector failing (proxy error or auth issue) |
+| ✋ Manual | No connector — track by hand in Google Sheets |
+| 🔧 VPS MCP | Available via HAMAYA MCP server on VPS |
 
 ---
 
-### 2. Microsoft Marketing MCP — VPS port 8111
-**File:** `/opt/hamaya/microsoft/tools.py`
-**Token:** `MS_MKTG_TOKEN` | **Auth:** `az account get-access-token`
+## 1. WEB ANALYTICS
 
-| Tool | What it does |
-|---|---|
-| `mm_list_teams` | All Teams the account belongs to |
-| `mm_list_channels` | Channels inside a team |
-| `mm_get_channel_messages` | Recent messages from a channel |
-| `mm_search_teams_messages` | Full-text search across Teams |
-| `mm_list_emails` | Inbox / sent / folder listing |
-| `mm_get_email` | Full email content by ID |
-| `mm_search_emails` | Keyword search across all Outlook folders |
-| `mm_get_email_stats` | Sent / received count for last N days |
-| `mm_search_sharepoint` | Search SharePoint docs / pages |
-| `mm_list_sharepoint_sites` | All accessible SharePoint sites |
-| `mm_get_sharepoint_files` | Files in a site's document library |
-| `mm_list_calendar_events` | Calendar events in a date range |
-| `mm_get_free_busy` | Availability for one or more users |
-| `mm_search_people` | Directory / contacts search |
-| `mm_get_my_profile` | Authenticated user's MS profile |
-| `mm_send_email` ⚠️ | Send Outlook email — MAYA APPROVED |
-| `mm_create_draft_email` ⚠️ | Save draft without sending — MAYA APPROVED |
-| `mm_post_teams_message` ⚠️ | Post to Teams channel — MAYA APPROVED |
-| `mm_create_calendar_event` ⚠️ | Create calendar event — MAYA APPROVED |
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Google Analytics 4 (GA4)** | ✅ Connected | Traffic, sessions, bounce rate, conversions, funnels, realtime visitors, custom reports by date/device/channel | Search Visibility Kit (Claude.ai) + Google Marketing MCP port 8110 |
+| **Sealmetrics** | ✅ Connected | Privacy-first analytics — sessions, pageviews, channel mix, funnel analysis, weekly health check, drop diagnosis | seal-copilot plugin (Claude.ai) |
+| **Amplitude** | 🔴 Offline | Product analytics, retention cohorts, user journeys | Plugin proxy error — cannot connect |
+| **Pendo** | 🔴 Offline | In-app engagement, NPS, feature adoption | Plugin proxy error — cannot connect |
 
 ---
 
-### 3. MS Platform MCP — VPS port 8104
-**File:** `/opt/hamaya/core/ms_platform_mcp.py`
-**Token:** `MSPLATFORM_MCP_TOKEN`
+## 2. SEO & SEARCH VISIBILITY
 
-| Tool | What it does |
-|---|---|
-| `power_list_flows` | List all Power Automate flows |
-| `ms_platform_status` | Connectivity check for PA + SharePoint |
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Google Search Console** | ✅ Connected | Clicks, impressions, CTR, position by page/query; index status; URL inspection; sitemap management; crawl errors | Search Visibility Kit GSC (Claude.ai) + Google Marketing MCP port 8110 |
+| **Ahrefs** | 🔴 Offline | Backlink profile, keyword difficulty, site audit, competitor gaps | Plugin proxy error — cannot connect |
+| **Similarweb** | 🔴 Offline | Traffic share, referral sources, competitor benchmarks | Plugin proxy error — cannot connect |
+| **Supermetrics** | 🔴 Offline | Cross-channel data aggregation | Plugin proxy error — cannot connect |
+| **AI Search Visibility** | ✅ Connected | Check brand/page presence in AI-generated answers (ChatGPT, Gemini, Perplexity) | ai-seo plugin (Claude.ai) |
 
----
-
-### 4. MS Tools MCP — VPS port 8109
-**File:** `/opt/hamaya/ms/tools.py`
-**Token:** `MS_TOOLS_TOKEN` | 28 tools — PA + Copilot Studio combined
-
-**Power Automate (9 tools):**
-
-| Tool | What it does |
-|---|---|
-| `list_flows` | All flows in the environment |
-| `get_flow_definition` | Full JSON of a specific flow |
-| `get_connection_references` | Connectors a flow depends on |
-| `get_flow_runs` | Run history for a flow |
-| `create_flow` ⚠️ | Create new flow — MAYA APPROVED |
-| `update_flow` ⚠️ | Update flow definition — MAYA APPROVED |
-| `delete_flow` ⚠️ | Delete a flow — MAYA APPROVED |
-| `patch_flow` ⚠️ | Patch flow properties — MAYA APPROVED |
-| `set_flow_state` ⚠️ | Enable / disable a flow — MAYA APPROVED |
-
-**Copilot Studio (4 tools):**
-
-| Tool | What it does |
-|---|---|
-| `list_copilot_agents` | All Copilot Studio bots |
-| `trigger_power_automate_flow` ⚠️ | Trigger a flow from Copilot — MAYA APPROVED |
-| `start_conversation` | Open a Direct Line conversation |
-| `send_prompt` | Send message + get reply via Direct Line |
+**SEO actions available now:**
+- Run full site SEO audit → `search-visibility-kit:seo-audit`
+- Fix on-page SEO → `searchfit-seo:on-page-seo`
+- Schema markup → `searchfit-seo:schema-markup`
+- Technical SEO → `searchfit-seo:technical-seo`
+- AI visibility audit → `ai-seo:ai-seo-audit`
 
 ---
 
-### 5. FBTW-Mcp-PA — Claude.ai connector (`mcp__FBTW-Mcp-PA__*`)
-9 tools — direct Power Automate CRUD from Claude.ai session (no VPS hop):
-`list_flows` · `get_flow_definition` · `get_connection_references` · `get_flow_runs` · `create_flow` · `update_flow` · `delete_flow` · `patch_flow` · `set_flow_state`
+## 3. PAID ADVERTISING
+
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Google Ads** | 🔧 VPS MCP | Campaign list, impressions, clicks, cost, conversions by date | Google Marketing MCP port 8110 (`gm_get_ads_campaigns`, `gm_get_ads_performance`) |
+| **Meta Ads (Facebook/Instagram)** | ✋ Manual | No live connector — pull reports from Ads Manager manually | Track in Google Sheets |
+| **LinkedIn Ads** | ✋ Manual | No live connector — pull from LinkedIn Campaign Manager | Track in Google Sheets |
+| **Google Display / YouTube Ads** | ✋ Manual | No live connector | Track in Google Sheets |
+| **Realize / Taboola** | 🔴 Offline | Native advertising campaigns | Plugin proxy error |
+| **HyperFX** | 🔴 Offline | Multi-channel ad automation | Plugin proxy error |
 
 ---
 
-### 6. Azure — VPS (`az` CLI + hamaya_sovereign_core port 8200)
+## 4. EMAIL MARKETING
 
-| Capability | How |
-|---|---|
-| MS Graph token | `az account get-access-token --resource https://graph.microsoft.com` |
-| Copilot Studio OAuth | Client credentials via `AZURE_CLIENT_ID` / `AZURE_CLIENT_SECRET` |
-| Entra ID commands | `entra:` prefix in hamaya_sovereign_core natural-language router |
-| Azure resource commands | `azure:` prefix in hamaya_sovereign_core |
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Gmail** | ✅ Connected | Send, draft, search, read, label, filter, vacation responder, bulk ops | Microsoft 365 Connector (Outlook) + Gmail plugin (needs auth) |
+| **Outlook / Exchange** | ✅ Connected | Send, draft, reply, search, batch delete, label, calendar, shared mailboxes | Microsoft 365 Connector (Claude.ai) + MS Marketing MCP port 8111 |
+| **ActiveCampaign** | 🔶 Partial | Email sequences, automations, contact lists, campaign reports | Plugin present but URL not configured — open /plugin settings |
+| **Mailercloud** | 🔴 Offline | Email campaigns, list management, deliverability | Plugin proxy error — cannot connect |
+| **Klaviyo** | 🔴 Offline | E-commerce email flows, segmentation | Plugin proxy error — cannot connect |
 
----
-
-## GOOGLE
-
-### 1. Search Visibility Kit — Claude.ai (`mcp__plugin_search-visibility-kit_*`)
-30 tools across GA4 + GSC:
-
-**GA4 Analytics (9 tools):**
-
-| Tool | What it does |
-|---|---|
-| `run_report` | Custom GA4 report (any metrics/dimensions) |
-| `run_realtime_report` | Who is on-site right now |
-| `run_funnel_report` | Conversion funnel analysis |
-| `run_conversions_report` | Goal completions report |
-| `get_account_summaries` | All GA4 properties in the account |
-| `get_property_details` | Property config and data streams |
-| `get_custom_dimensions_and_metrics` | Custom event definitions |
-| `list_google_ads_links` | Linked Google Ads accounts |
-| `list_property_annotations` | GA4 annotations |
-
-**Google Search Console (21 tools):**
-
-| Tool | What it does |
-|---|---|
-| `get_search_analytics` | Clicks, impressions, CTR, position |
-| `get_advanced_search_analytics` | Filtered / segmented search data |
-| `get_performance_overview` | High-level site performance |
-| `get_search_by_page_query` | Per-page keyword breakdown |
-| `compare_search_periods` | Period-over-period comparison |
-| `inspect_url_enhanced` | URL index status + enhancements |
-| `batch_url_inspection` | Bulk URL inspection |
-| `check_indexing_issues` | Crawl errors and coverage issues |
-| `list_properties` | All verified GSC sites |
-| `get_site_details` | Site config |
-| `add_site` ⚠️ | Add a site to GSC |
-| `delete_site` ⚠️ | Remove a site |
-| `manage_sitemaps` ⚠️ | Submit / delete sitemaps |
-| `submit_sitemap` ⚠️ | Submit a sitemap URL |
-| `delete_sitemap` ⚠️ | Remove a sitemap |
-| `get_sitemaps` | List all sitemaps |
-| `get_sitemap_details` | Sitemap status + errors |
-| `list_sitemaps_enhanced` | Extended sitemap listing |
-| `get_capabilities` | What the connector can do |
-| `get_creator_info` | Who authorized the connector |
-| `reauthenticate` | Re-auth if token expired |
+**Email actions available now:**
+- Draft email sequence → `marketing:email-sequence`
+- Analyse campaigns (Mailercloud) → `mailercloud:analyze-campaigns` *(when fixed)*
+- ActiveCampaign weekly digest → `activecampaign:weekly-digest` *(when URL set)*
 
 ---
 
-### 2. Google Drive — Claude.ai connector (`mcp__Google_Drive__*`)
-6 tools:
+## 5. SOCIAL MEDIA
 
-| Tool | What it does |
-|---|---|
-| `list_recent_files` | Recently modified files |
-| `search_files` | Full-text / name search |
-| `get_file_metadata` | File details (size, type, owner) |
-| `get_file_permissions` | Who has access |
-| `read_file_content` | Read Google Docs / text files |
-| `download_file_content` | Download binary / export |
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Postiz** | 🔶 Partial | Schedule and publish posts across platforms | Plugin present but social accounts not linked |
+| **Instagram** | ✋ Manual | No live connector for posting/analytics — use Canva for creatives | Postiz (when linked) |
+| **LinkedIn** | ✋ Manual | No live connector | Postiz (when linked) |
+| **Facebook** | ✋ Manual | No live connector | Postiz (when linked) |
+| **YouTube** | ✋ Manual | No live connector | Postiz (when linked) |
+| **X / Twitter** | ✋ Manual | No live connector | Postiz (when linked) |
 
----
-
-### 3. Google Sheets — Claude.ai connector (`mcp__Google_Sheets__*`)
-9 tools:
-
-| Tool | What it does |
-|---|---|
-| `get_spreadsheet` | Spreadsheet metadata + sheet list |
-| `get_values` | Read a cell range |
-| `update_values` ⚠️ | Write to a range |
-| `append_values` ⚠️ | Add rows below existing data |
-| `update_spreadsheet` ⚠️ | Batch update (format, merge, etc.) |
-| `batch_clear_values` ⚠️ | Clear multiple ranges |
-| `insert_dimension` ⚠️ | Insert rows or columns |
-| `update_formulas` ⚠️ | Write formulas to cells |
-| `copy_sheet_to_another_spreadsheet` ⚠️ | Copy a tab to another file |
+**Social skills available now** *(for strategy and copy — not live posting)*:
+- Instagram strategy → `hyper-marketing:instagram`
+- LinkedIn strategy → `hyper-marketing:linkedin`
+- YouTube strategy → `hyper-marketing:youtube`
+- Content calendar → `content-strategy:content-calendar`
+- Social content engine → `small-business:social-content-engine`
 
 ---
 
-### 4. Google Calendar — Claude.ai (`mcp__plugin_small-business_google-calendar__*`)
-9 tools:
+## 6. CONTENT & CREATIVE
 
-| Tool | What it does |
-|---|---|
-| `list_calendars` | All calendars in the account |
-| `list_events` | Events in a date range |
-| `get_event` | Single event details |
-| `create_event` ⚠️ | Create a new event |
-| `update_event` ⚠️ | Edit an existing event |
-| `delete_event` ⚠️ | Delete an event |
-| `respond_to_event` ⚠️ | Accept / decline invite |
-| `search_events` | Search by keyword |
-| `suggest_time` | Find a free slot |
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Canva** | ✅ Connected | Design banners, brochures, social posts, presentations, brand templates | Canva MCP (Claude.ai) |
+| **Figma** | ✅ Connected | UI/UX design, prototypes, design system components | Figma MCP (Claude.ai) |
+| **Google Drive** | ✅ Connected | Store files, share proofs, read Docs, search content | Google Drive connector (Claude.ai) + Google Marketing MCP port 8110 |
+| **Google Docs** | ✅ Connected | Read and edit documents (via Drive connector) | Google Drive connector |
+| **Miro** | 🔴 Offline | Whiteboards, campaign planning boards | Plugin proxy error |
+| **Adobe** | 🔴 Offline | Photoshop, Illustrator, Acrobat, PDF generation | Plugin proxy error |
 
 ---
 
-### 5. Google Marketing MCP — VPS port 8110
-**File:** `/opt/hamaya/google/tools.py`
-**Token:** `GOOGLE_MCP_TOKEN` | **Auth:** `GOOGLE_APPLICATION_CREDENTIALS` or `GOOGLE_ACCESS_TOKEN`
-11 tools:
+## 7. WEBSITE & LANDING PAGES
 
-| Tool | What it does |
-|---|---|
-| `gm_get_analytics` | GA4 report (any metrics/dimensions/date range) |
-| `gm_get_realtime` | GA4 live active users |
-| `gm_get_search_console` | GSC clicks, impressions, CTR, position |
-| `gm_list_gsc_sites` | All GSC verified sites |
-| `gm_get_ads_campaigns` | Google Ads campaign list |
-| `gm_get_ads_performance` | Ads cost / clicks / conversions by date |
-| `gm_read_sheet` | Read a Sheets range |
-| `gm_list_sheet_tabs` | List all tabs in a spreadsheet |
-| `gm_write_sheet` ⚠️ | Write to a Sheets range — MAYA APPROVED |
-| `gm_append_sheet` ⚠️ | Append rows to a sheet — MAYA APPROVED |
-| `gm_list_drive_files` | List Drive files by query / folder |
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Wix** | ✅ Connected | Build pages, deploy site, manage CMS, SEO settings | Wix MCP (Claude.ai) |
+| **Lovable** | ✅ Connected | Build web apps and landing pages with AI | Lovable MCP (Claude.ai) |
+| **Supabase** | ✅ Connected | Database for web apps, user auth, edge functions | Supabase MCP (Claude.ai) + HAMAYA Supabase Admin MCP port 8105 |
+| **Bright Data** | ✅ Connected | Web scraping, competitor page monitoring, price tracking | Bright Data plugin (Claude.ai) |
 
 ---
 
-## ARTIFACT
+## 8. MARKET & COMPETITOR INTELLIGENCE
 
-### Marketing Toolbox — claude.ai/artifact/HSFDJGixWSiDjrHip4Uk37
-Visual command center. No MCP calls — reference + tracker only.
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Bright Data** | ✅ Connected | Scrape competitor sites, monitor brand mentions, extract pricing, build lead lists | Bright Data plugin (Claude.ai) |
+| **Nimble** | 🔴 Offline | B2B company and contact intelligence | Plugin proxy error |
+| **Manifold** | 🔴 Offline | Competitor teardowns, market mapping, social monitoring | Plugin proxy error |
 
-| What it shows | Detail |
-|---|---|
-| 13 Connected tools | GA4, GSC, Sealmetrics, Gmail, Drive, Sheets, Canva, Wix, Bright Data, Zapier, Calendar, Outlook/Teams, SharePoint |
-| 2 Partial | ActiveCampaign (URL not set), Postiz (social accounts not linked) |
-| 3 Offline | Ahrefs, Klaviyo, Mailercloud (proxy errors) |
-| 6 Manual track | Print, Events, Outdoor, PR, Direct Mail, Agent Outreach |
-| Activity Tracker | localStorage table — item, channel, vendor, cost, date, status, result |
+**Intelligence skills available now:**
+- Competitor brief → `marketing:competitive-brief`
+- Competitor intel → `brightdata-plugin:competitive-intel`
+- SEO competitor gaps → `searchfit-seo:competitor-analyzer`
 
 ---
 
-## Port Map Summary
+## 9. MARKETING AUTOMATION & CRM
 
-| Port | Server | Stack |
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Zapier** | ✅ Connected | Connect apps, automate workflows, trigger actions across tools | Zapier MCP (Claude.ai) |
+| **Power Automate** | ✅ Connected | Microsoft flows — email triggers, SharePoint automations, Teams alerts | FBTW-Mcp-PA (Claude.ai) + MS Tools MCP port 8109 |
+| **ActiveCampaign CRM** | 🔶 Partial | Contact tracking, deal pipeline, automations | Plugin present, URL not set |
+| **Google Sheets as CRM** | ✅ Connected | Track leads, campaigns, budgets, vendors, results | Google Sheets connector (Claude.ai) + Google Marketing MCP port 8110 |
+
+---
+
+## 10. TRADITIONAL MARKETING — ALL MANUAL TRACK
+
+> No live connectors. Log all activity in a Google Sheet with columns: **item · type · vendor · cost · date · status · result · owner**
+> Attribution tip: give each channel its own promo code, phone number, or UTM-tagged QR code.
+
+| Channel | What to track | Where to ask for numbers |
 |---|---|---|
-| 8101 | FBTW MCP (main) | VPS + PA + merged tools |
-| 8102 | Governance MCP | Registers, decisions, risks |
-| 8104 | MS Platform MCP | PA list + SharePoint status |
-| 8105 | Supabase Admin MCP | DB admin |
-| 8107 | Hostinger MCP | DNS, VPS, billing |
-| 8108 | Copilot MCP | Copilot Studio tools |
-| 8109 | MS Tools MCP | 28 PA + Copilot combined |
-| 8110 | Google Marketing MCP | Analytics + GSC + Ads + Sheets + Drive |
-| 8111 | Microsoft Marketing MCP | Teams + Outlook + SharePoint + Calendar |
-| 8200 | HAMAYA Sovereign Core | HTTP natural-language router |
+| **Print Collateral** (brochures, flyers, standees, banners) | Vendor, proof status, delivery date, cost, distribution count | Print vendor / in-house |
+| **Outdoor & Signage** (hoardings, airport displays, metro) | Location, size, duration, cost, attributed enquiries | Outdoor vendor |
+| **Events & Roadshows** | Date, venue, cost, leads captured, meetings booked, follow-up rate | Event team |
+| **Trade Shows** | Booth cost, footfall, cards collected, demos given, pipeline added | Trade show lead |
+| **Corporate Client Visits** | Accounts visited, contacts met, outcome, next step | Sales / ops |
+| **Agent Outreach** (travel agents, B2B) | Agents contacted, activated, bookings attributed | Sales team |
+| **Direct Mail** (physical mailers, courier kits) | Sent count, response rate, cost per response | Marketing ops |
+| **WhatsApp Broadcast** | Sent, delivered, read, replied, converted | WhatsApp Business / operator |
+| **PR & Media Coverage** | Coverage count, publication, reach, sentiment, cost | PR agency or in-house |
+| **Sponsorships** | Event/property, cost, impressions, leads, brand lift | Sponsorship partner |
+| **Partner & Co-marketing** | Partner name, offer, leads generated, revenue attributed | Partner manager |
+| **SMS Campaigns** | Sent, delivered, clicked, converted, opt-outs | SMS provider |
 
 ---
 
-⚠️ = write operation — requires `approval="MAYA APPROVED"` on VPS MCP tools.
+## 11. OPS & REPORTING
+
+| Tool | Status | What you can do | Source |
+|---|---|---|---|
+| **Google Calendar** | ✅ Connected | Campaign deadlines, event dates, team meetings, free-busy check | Google Calendar plugin (Claude.ai) |
+| **Outlook Calendar** | ✅ Connected | Corporate calendar, meeting invites, availability | Microsoft 365 Connector (Claude.ai) + MS Marketing MCP port 8111 |
+| **Microsoft Teams** | ✅ Connected | Channel comms, campaign discussions, file sharing, search | Microsoft 365 Connector + MS Marketing MCP port 8111 |
+| **SharePoint** | ✅ Connected | Document library, approval workflows, campaign file store | Microsoft 365 Connector + MS Marketing MCP port 8111 |
+| **Google Sheets** | ✅ Connected | Budget vs spend tracker, traditional channel log, lead tracker | Google Sheets connector (Claude.ai) + Google Marketing MCP port 8110 |
+| **Manager Update** | ✅ Connected | Auto-pull Wins / Blockers / Priorities from live tools | `marketing-update` skill (this project) |
+| **Marketing Toolbox UI** | ✅ Published | Visual command center — status cards, setup guides, activity tracker | claude.ai/artifact/HSFDJGixWSiDjrHip4Uk37 |
+
+---
+
+## 12. HAMAYA VPS MCP SERVERS — MARKETING LAYER
+
+| Server | Port | Tools |
+|---|---|---|
+| Google Marketing MCP | 8110 | GA4 · GSC · Google Ads · Sheets · Drive (11 tools) |
+| Microsoft Marketing MCP | 8111 | Teams · Outlook · SharePoint · Calendar (19 tools) |
+| MS Tools MCP | 8109 | Power Automate CRUD + Copilot Studio (28 tools) |
+| MS Platform MCP | 8104 | PA list + SharePoint status (2 tools) |
+
+---
+
+## SUMMARY COUNT
+
+| Category | Connected | Partial | Offline | Manual |
+|---|---|---|---|---|
+| Web Analytics | 2 | 0 | 2 | 0 |
+| SEO | 2 | 0 | 3 | 0 |
+| Paid Ads | 1 (VPS) | 0 | 2 | 3 |
+| Email | 2 | 1 | 2 | 0 |
+| Social | 0 | 1 | 0 | 5 |
+| Content & Creative | 3 | 0 | 2 | 0 |
+| Website | 3 | 0 | 0 | 0 |
+| Intelligence | 1 | 0 | 2 | 0 |
+| Automation & CRM | 3 | 1 | 0 | 0 |
+| Traditional | 0 | 0 | 0 | 12 |
+| Ops & Reporting | 6 | 0 | 0 | 0 |
+
+---
+
+⚠️ Write operations on VPS MCP tools require `approval="MAYA APPROVED"`.
+🔶 To fix Partial tools: open `/plugin` panel in Claude.ai and complete config.
+🔴 To fix Offline tools: check proxy settings — most fail with 403 proxy tunnel error.
