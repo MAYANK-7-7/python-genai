@@ -116,7 +116,7 @@ No paid digital marketing running. Traditional channels are tracked manually in 
 | Item | Status (source: Search Console export, 4–21 Oct 2026) |
 |---|---|
 | Search Console — flybytheway.com | Live. 9 clicks · 48 impressions · 18.8% CTR · avg position 3.1 · 11 pages indexed |
-| Sitemap | 17 errors (missing "/" in URLs, wrong namespace). Fix pending |
+| Sitemap | Fixed 23 Oct 2026. 14 pages discovered, processed successfully, 0 errors |
 | Google Business Profile | 2 listings, both verified |
 | Google Analytics 4 | Not confirmed |
 | Paid tools (Supermetrics etc.) | Not used — no paid tools
