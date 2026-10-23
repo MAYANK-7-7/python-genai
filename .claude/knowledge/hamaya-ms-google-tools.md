@@ -1,85 +1,180 @@
-# FBTW Marketing — Actual Tool Inventory
-> What is actually being used. No digital campaigns running yet. Traditional marketing is the current reality.
+# FBTW — Business Tool Index
+> Source: FlyByTheWay Complete Business Core · October 23, 2026
+> What is built, what is live, what is missing.
 
 ---
 
-## TRADITIONAL MARKETING — Active Channels
+## TOOLS BUILT & LIVE
 
-These are the channels FBTW currently uses. All tracked manually in Google Sheets.
-
-| Channel | What happens | What to track |
-|---|---|---|
-| **Print Collateral** | Brochures, flyers, standees, banners | Vendor · proof status · delivery date · cost · distribution count |
-| **Outdoor & Signage** | Hoardings, airport displays, metro panels | Location · duration · cost · enquiries attributed |
-| **Events & Roadshows** | FBTW-hosted or attended travel events | Date · venue · cost · leads · meetings booked |
-| **Trade Shows** | Industry exhibitions | Booth cost · footfall · cards collected · demos · pipeline |
-| **Corporate Client Visits** | Direct visits to corporate accounts | Accounts visited · contacts met · outcome · next step |
-| **Agent Outreach** | Visits/calls to travel agents, B2B partners | Agents contacted · activated · bookings attributed |
-| **Direct Mail** | Physical mailers, courier kits to corporates | Sent · response rate · cost per response |
-| **WhatsApp Broadcast** | Bulk messages to leads/clients | Sent · delivered · read · replied · converted |
-| **PR & Media Coverage** | Press features, editorial mentions | Coverage count · publication · reach · cost |
-| **Sponsorships** | Event or property sponsorships | Property · cost · impressions · leads · brand lift |
-| **Partner & Co-marketing** | Joint campaigns with airlines, hotels, aggregators | Partner name · offer · leads · revenue attributed |
-| **SMS Campaigns** | Outbound SMS to database | Sent · delivered · clicked · converted · opt-outs |
-
-> Attribution tip: Give each channel its own promo code, phone number, or UTM-tagged QR code so results carry a number.
-
----
-
-## OPERATIONS TOOLS — Available Now
-
-These are connected and in active use for day-to-day work.
-
-| Tool | What it does |
+| Tool | What It Does |
 |---|---|
-| **Microsoft Teams** | Internal comms, campaign discussions, file sharing |
-| **Outlook** | Client emails, corporate correspondence, calendar |
-| **SharePoint** | Document library — proofs, contracts, campaign files |
-| **Google Sheets** | Budget tracker, lead tracker, traditional channel log |
-| **Google Drive** | File storage, sharing with vendors and clients |
-| **Google Calendar / Outlook Calendar** | Campaign deadlines, event dates, meeting scheduling |
-| **Canva** | Design for print and digital creatives |
-| **Power Automate** | Email triggers, approval workflows, SharePoint automations |
-| **Manager Update** | Pull Wins / Blockers / Priorities → `marketing-update` skill |
+| **marketing-appbox** | Maps 40+ Claude skills across 13 marketing functions — skill navigation layer |
+| **marketing-update** | Structured reporting: 3 sections, max 3 bullets, metrics required, pulls live data first |
 
 ---
 
-## DIGITAL TOOLS — Exist But Not Active Yet
+## WHAT FBTW HAS ✅
 
-These connectors are available in Claude.ai but FBTW has no active digital marketing running through them.
+| Component | Tool |
+|---|---|
+| Database | Supabase |
+| Automation | Power Automate |
+| Communication | Microsoft 365 — Outlook + Teams |
+| Cloud infrastructure | Hostinger VPS |
+| Design / Creative | Canva + Figma |
+| Diagrams / Flows | Lucid + Miro |
+| Website | Wix + Hostinger hosting |
+| App builder | Lovable |
+| Cloud partner | Microsoft Azure |
+| Skill layer | marketing-appbox |
+| Reporting rules | marketing-update |
 
-| Tool | Status | What is needed to activate |
+---
+
+## WHAT FBTW IS MISSING ❌
+
+| Gap | What's Missing | Best Fix |
 |---|---|---|
-| Google Analytics 4 | Connector present | Website needs GA4 tracking code installed |
-| Google Search Console | Connector present | Domain needs to be verified in GSC |
-| Google Ads | VPS MCP present | Ad account + budget needed to start |
-| SEO (Ahrefs / GSC) | GSC connector present, Ahrefs offline | Active website with pages to optimise |
-| Email Marketing (ActiveCampaign) | Connector present, URL not set | Configure URL in /plugin settings |
-| Social Media (Postiz) | Connector present | Social accounts need to be linked |
+| Lead capture | No form-to-register pipeline | Wix form → Power Automate → Supabase |
+| GDS / Booking data | Manual booking entry only | Amadeus / Sabre API or CSV import flow |
+| Accounting | No finance software connected | Zoho Books (API-ready, India GST-friendly) |
+| WhatsApp | Client communication missing | WhatsApp Business API via WATI or 360dialog |
+| CRM view | No visual pipeline | Lovable lightweight CRM |
+| Client portal | No client self-service | Lovable app — booking status + invoice view |
 
 ---
 
-## TRACKING SHEET STRUCTURE
+## 6 BUSINESS LAYERS
 
-Use one Google Sheet for all traditional channels. Columns:
-
+### Layer 1 — Marketing Brain
 ```
-Item | Type | Vendor/Platform | Cost (INR) | Date | Status | Result | Owner
+Monday 8AM Auto-trigger
+  → Pull metrics (marketing-appbox skills)
+  → Detect drops / wins
+  → Create action tasks (FBTW register)
+  → Send decision brief (Outlook / Teams)
+  → Friday check: tasks done?
+  → Log to Supabase
+  → Next week starts smarter
 ```
-
-Examples:
-- Brochure print run → Print · ABC Printers · ₹18,000 · Oct 2026 · Delivered · 500 distributed · Maya
-- Agent visit (Delhi) → Agent Outreach · Direct · ₹0 · Oct 2026 · Done · 3 agents activated · Sales
-- WhatsApp broadcast → WhatsApp · Internal · ₹0 · Oct 2026 · Sent 420 · 18 replies · Marketing
+**Status:** Ready to build. All tools present.
 
 ---
 
-## FOR MANAGER UPDATE
+### Layer 2 — Sales Core
+```
+Lead enters (form / email / WhatsApp)
+  → Auto-classified (FBTW: classify_notification)
+  → Logged to Lead Register (Supabase)
+  → Assigned priority + follow-up date
+  → Reminder fires (Power Automate)
+  → Outcome logged (won / lost / pending)
+  → Weekly pipeline report → Outlook
+```
+**Tools present:** FBTW registers, Supabase, Microsoft 365, Power Automate
+**Gap:** ❌ No lead capture form connected. Leads entering manually.
 
-Pull from the sheet above + ask Maya for manual inputs:
+---
 
-- **Wins** → channels with numbers (leads, activations, coverage, bookings)
-- **Blockers** → vendor delays, approval pending, budget issues
-- **Priorities** → next activity with owner and date
+### Layer 3 — Operations Core
+```
+Booking request received
+  → Logged to Operations Register
+  → Status tracked (pending / confirmed / ticketed / closed)
+  → Client communication sent (Outlook / Teams)
+  → Escalation triggered if SLA breached
+  → Daily ops summary → Founder Activity Centre
+```
+**Tools present:** FBTW MCP (log_escalation, get_founder_activity_centre), Microsoft 365
+**Gap:** ❌ No GDS / booking API connected. Manual entry risk.
 
-Skill: `marketing-update` — produces ready-to-paste update in under 30 seconds.
+---
+
+### Layer 4 — Finance Core
+```
+Invoice created
+  → Logged to Finance Register (Supabase)
+  → Payment due date tracked
+  → Auto-reminder sent if unpaid (Power Automate)
+  → Monthly close report generated
+  → PDF exported (FBTW: generate_and_stream_pdf)
+  → Stored in SharePoint
+```
+**Tools present:** FBTW PDF generator, SharePoint, Supabase, Power Automate
+**Gap:** ❌ No accounting software connected. Zoho Books recommended.
+
+---
+
+### Layer 5 — Intelligence Core
+```
+Competitor activity detected
+  → Logged (log_intelligence)
+  → Market opportunity spotted
+  → Logged (log_opportunity)
+  → Weekly intelligence brief compiled
+  → Feeds into Monday Marketing Brain
+  → Informs decisions
+```
+**Tools present:** FBTW intelligence logs, Supabase, Bright Data plugin
+**Status:** Ready to build.
+
+---
+
+### Layer 6 — Founder Control Centre
+```
+Single daily view →
+  Marketing status
+  Sales pipeline
+  Operations pending
+  Finance outstanding
+  Intelligence alerts
+  VPS / system health (Hostinger VPS)
+→ All in one brief → 9AM every day → Outlook
+```
+**Tools present:** FBTW get_founder_activity_centre, hostinger_vps_metrics, all registers
+**Status:** Ready to build.
+
+---
+
+## MARKETING — TRADITIONAL CHANNELS (Active, All Manual)
+
+No digital marketing running. All activity tracked in Google Sheets.
+
+| Channel | What to track |
+|---|---|
+| **Print Collateral** (brochures, flyers, standees, banners) | Vendor · proof status · cost · distribution count |
+| **Outdoor & Signage** | Location · duration · cost · enquiries attributed |
+| **Events & Roadshows** | Date · venue · cost · leads · meetings booked |
+| **Trade Shows** | Booth cost · footfall · cards collected · pipeline |
+| **Corporate Client Visits** | Accounts visited · contacts met · outcome · next step |
+| **Agent Outreach** | Agents contacted · activated · bookings attributed |
+| **Direct Mail** | Sent · response rate · cost per response |
+| **WhatsApp Broadcast** | Sent · delivered · read · replied · converted |
+| **PR & Media Coverage** | Coverage count · publication · reach · cost |
+| **Sponsorships** | Property · cost · impressions · leads |
+| **Partner & Co-marketing** | Partner · offer · leads · revenue attributed |
+| **SMS Campaigns** | Sent · delivered · clicked · converted |
+
+**Tracking sheet columns:**
+```
+Item | Type | Vendor | Cost (INR) | Date | Status | Result | Owner
+```
+
+---
+
+## BUILD ORDER
+
+| Week | Task | Priority |
+|---|---|---|
+| Week 1 | Founder Control Centre — daily 9AM brief | IMMEDIATE |
+| Week 2 | Sales Core — lead register + pipeline | HIGH |
+| Week 3 | Marketing Brain — closed loop automation | HIGH |
+| Week 4 | Operations Core — booking tracking | HIGH |
+| Week 5 | Finance Core — invoice + payment reminders | MEDIUM |
+| Week 6 | Intelligence Core — competitor + opportunity logs | MEDIUM |
+| Week 7 | Wix form + Zoho Books + WhatsApp API | HIGH |
+| Week 8 | Client portal via Lovable | MEDIUM |
+
+---
+
+*Review: Monthly or when a new system is added.*
