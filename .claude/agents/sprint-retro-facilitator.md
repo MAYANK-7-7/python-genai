@@ -24,9 +24,6 @@ tools:
     mcp_server_name: slack
     default_config:
       permission_policy: *a1
-skills:
-  - type: anthropic
-    skill_id: docx
 metadata:
   template: sprint-retro-facilitator
 ---

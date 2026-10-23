@@ -17,9 +17,6 @@ tools:
     mcp_server_name: notion
     default_config:
       permission_policy: *a1
-skills:
-  - type: anthropic
-    skill_id: docx
 metadata:
   template: field-monitor
 ---
