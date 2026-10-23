@@ -1,5 +1,5 @@
 # H@MAYA Systems Knowledge
-*Last updated: 2026-10-23 · Source: VPS live inspection*
+*Last updated: 2026-10-23 · Source: VPS live pm2 list inspection*
 
 ## PORTAL
 
@@ -18,17 +18,26 @@ App file: `/var/www/hamaya-app/index.html` — Single Page Application, 22KB, up
 | /api/order | 127.0.0.1:8200 | H@MAYA Direct Core API — bypasses port 3009 |
 | /api/ | 127.0.0.1:3009 | Existing backend API |
 
-## MCP SERVERS (LIVE on VPS)
+## MCP SERVERS (4 CONNECTORS — LIVE on VPS)
 
-| Server | Domain | Port | SSL URL |
-|---|---|---|---|
-| fbtw-vps | VPS Commander | 8101 | https://vps-mcp.flybytheway.com/mcp |
-| fbtw-gov | Gov/Universe | 8102 | https://gov-mcp.flybytheway.com/mcp |
-| fbtw-ms | Microsoft 365 | 8104 | https://ms-mcp.flybytheway.com/mcp |
-| fbtw-supa | Supabase | 8105 | https://supa-mcp.flybytheway.com/mcp |
-| fbtw-pa | Power Automate | 8106 | https://pa-mcp.flybytheway.com/mcp |
+Maya confirmed: 4 MCP servers used as connectors in Claude/Copilot Studio.
 
-SSL certificate: /etc/letsencrypt/live/pa-mcp.flybytheway.com/ (covers all 5 subdomains)
+| PM2 Name | PM2 ID | Status | Purpose | SSL URL |
+|---|---|---|---|---|
+| hamaya-mcp-server | 11 | ✅ online (11 restarts) | FBTW Main MCP — registers, reports, VPS, Supabase, PA | https://vps-mcp.flybytheway.com/mcp |
+| hamaya-universe | 13 | ✅ online (8 restarts) | Universe / Gov intelligence layer | https://gov-mcp.flybytheway.com/mcp |
+| hamaya-command | 12 | ✅ online (8 restarts) | Command Center — HAMAYA operating layer | (port TBC) |
+| fbtw-ms-platform-mcp | 19 | 🔴 ERRORED (22 restarts) | Microsoft 365 / SharePoint / PA connector | https://ms-mcp.flybytheway.com/mcp |
+
+Additional MCP processes running (not the 4 connectors):
+- fbtw-vps-mcp (ID 16) — VPS commander tools
+- fbtw-governance-mcp-v3 (ID 17) — governance layer
+- fbtw-supabase-admin (ID 15) — Supabase admin
+- fbtw-hostinger-mcp (ID 20) — Hostinger tools
+- hamaya-pa-mcp (ID 21) — Power Automate
+- hamaya-sovereign-core (ID 22) — 🔴 ERRORED (204 restarts) — needs investigation
+
+SSL certificate: /etc/letsencrypt/live/pa-mcp.flybytheway.com/ (covers subdomains)
 
 ## VPS FACTS
 
