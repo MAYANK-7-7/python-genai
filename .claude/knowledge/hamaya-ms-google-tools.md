@@ -49,7 +49,7 @@
 ### Layer 1 — Marketing Brain
 ```
 Monday 8AM Auto-trigger
-  → Pull metrics (marketing-appbox skills)
+  → Pull metrics (Google Sheets — traditional channels only)
   → Detect drops / wins
   → Create action tasks (FBTW register)
   → Send decision brief (Outlook / Teams)
@@ -57,7 +57,7 @@ Monday 8AM Auto-trigger
   → Log to Supabase
   → Next week starts smarter
 ```
-**Status:** Ready to build. All tools present.
+**Status:** Ready to build. Metrics source: traditional channels tracked in Google Sheets. No digital channel data active yet.
 
 ---
 
